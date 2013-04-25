@@ -47,6 +47,7 @@ public class Renderer {
 	//inputs
 	private KeyboardInput keyboard = new KeyboardInput(); // Keyboard polling
 	private MouseInput mouse = new MouseInput();
+	private Food currentFood = null;
 
 	public Renderer(SimulationState s) {
 		this.state = s;
@@ -132,6 +133,7 @@ public class Renderer {
 					clickFood.pos.x += newMousePos.x - mousePos.x;
 					clickFood.pos.y += newMousePos.y - mousePos.y;
 				}
+				currentFood = clickFood;
 
 			}
 
@@ -173,6 +175,13 @@ public class Renderer {
 	private void drawGrid() {
 	}
 
+	private void drawFoodStats(Food f) {
+		if (f != null) {
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("Food Quality: " + f.foodQuality, 500, 100);
+		}
+	}
+
 	private void drawBackground() {
 		//TODO: Draw Background. Refridgerator and stuff.
 
@@ -190,6 +199,7 @@ public class Renderer {
 		drawBackground();
 
 		drawFood(state.getFoodList());
+		drawFoodStats(currentFood);
 //		g2d.drawString("Frame " + currentState, 10, 10);
 
 
