@@ -15,9 +15,9 @@ public class Doctor {
     public List<FoodType> Fridge = new ArrayList<FoodType>();
     
     
-    public Doctor()
+    public Doctor(List<FoodType> F)
     {
-        
+        this.Fridge = F;
     }
     
     
