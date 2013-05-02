@@ -3,6 +3,12 @@
  * and open the template in the editor.
  */
 package FoodGame;
+import Util.Vector2;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -14,18 +20,38 @@ public class FoodType {
     public int Calories;
     public int Fat;
     
-    public boolean vegitarian;
-    public boolean vegan;
-    public boolean lactoseFree;
-    public boolean peanutFree;
+    public boolean vegitarian = false;
+    public boolean vegan= false;
+    public boolean lactoseFree = false;
+    public boolean peanutFree = false;
     
-    private String ImageLoc;
+    public Image image;
     
+    public Vector2 pos = new Vector2();
     
-    public FoodType()
+    public FoodType(int x, int y,String Name, Image i)
     {
+        pos.x = x;
+	pos.y = y;
+        this.image = i;
+        this.Name = Name;
         
     }
+    
+    public FoodType(int x, int y, String name, String imgName) {
+		Image img = null;
+		try {
+			img = ImageIO.read(new File(imgName));
+		} catch (IOException e) {
+		}
+		
+		pos.x = x;
+		pos.y = y;
+
+		this.Name = name;
+		image = img;
+	}
+
     
     public FoodType(String name)
     {
@@ -44,15 +70,18 @@ public class FoodType {
         return this.Calories;
     }
     
-    public String getImageLoc()
+    public Image getImageLoc()
     {
-        return this.ImageLoc;
+        return this.image;
     }
     
-    public void setImageLoc(String loc)
+    public void setImageLoc(Image image)
     {
-        this.ImageLoc = loc;
+        this.image = image;
     }
+    
+    
+    
     
     //actually set-get is uselss...just make the vars public
 }
