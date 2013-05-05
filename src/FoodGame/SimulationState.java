@@ -17,22 +17,22 @@ import java.util.List;
 public class SimulationState implements Serializable {
 	// TODO make sure this serializes properly for saving
 
-	public final List<FoodType> foodList = new ArrayList<>();
+	public final List<Food> foodList = new ArrayList(); //change bc compiler
 
 	public SimulationState() {
 	}
 
-	public void addFood(FoodType food) {
+	public void addFood(Food food) {
 		foodList.add(food);
 	}
 
-	public List<FoodType> getFoodList() {
+	public List<Food> getFoodList() {
 		return foodList;
 	}
 
-	public FoodType clickFood(int x, int y) {
+	public Food clickFood(int x, int y) {
 
-		for (FoodType f : foodList) {
+		for (Food f : foodList) {
 			System.out.println(x + " " + y);
 			int relX = x - f.pos.x;
 			int relY = y - f.pos.y;

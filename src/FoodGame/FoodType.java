@@ -3,55 +3,32 @@
  * and open the template in the editor.
  */
 package FoodGame;
-import Util.Vector2;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import javax.imageio.ImageIO;
 
 /**
  *
- * @author nate
+ * @author nate/damali
  */
 public class FoodType {
     
     public String Name;
     public int Calories;
-    public int Fat;
+    public float Fat;
+    public float sugars;
+    public float proteins;
+    public float carbs;
     
-    public boolean vegitarian = false;
-    public boolean vegan= false;
-    public boolean lactoseFree = false;
-    public boolean peanutFree = false;
+    public boolean vegitarian;
+    public boolean vegan;
+    public boolean lactoseFree;
+    public boolean peanutFree;
     
-    public Image image;
+    private String ImageLoc;
     
-    public Vector2 pos = new Vector2();
     
-    public FoodType(int x, int y,String Name, Image i)
+    public FoodType()
     {
-        pos.x = x;
-	pos.y = y;
-        this.image = i;
-        this.Name = Name;
         
     }
-    
-    public FoodType(int x, int y, String name, String imgName) {
-		Image img = null;
-		try {
-			img = ImageIO.read(new File(imgName));
-		} catch (IOException e) {
-		}
-		
-		pos.x = x;
-		pos.y = y;
-
-		this.Name = name;
-		image = img;
-	}
-
     
     public FoodType(String name)
     {
@@ -70,18 +47,15 @@ public class FoodType {
         return this.Calories;
     }
     
-    public Image getImageLoc()
+    public String getImageLoc()
     {
-        return this.image;
+        return this.ImageLoc;
     }
     
-    public void setImageLoc(Image image)
+    public void setImageLoc(String loc)
     {
-        this.image = image;
+        this.ImageLoc = loc;
     }
-    
-    
-    
     
     //actually set-get is uselss...just make the vars public
 }

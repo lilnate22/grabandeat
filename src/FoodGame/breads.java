@@ -6,21 +6,20 @@ package FoodGame;
 
 /**
  *
- * @author nate
+ * @author damali
  */
-public class Meats extends FoodType {
+public class breads extends FoodType {
     
-   public Meats(String name, int cal, float fat, float sugar, float carbs, float protein)
+   public breads(String name, int cal, float fat, boolean vegan, boolean vegitarian, float sugar, float carbs, float protein)
    {
-       this.vegan = false;
-       this.vegitarian = false;
+       this.vegan = vegan;
+       this.vegitarian = vegitarian;
        this.Name = name;
        this.Calories = cal;
        this.Fat = fat;
        this.sugars=sugar;
        this.proteins=protein;
        this.carbs=carbs;
-       
    }
   
  
