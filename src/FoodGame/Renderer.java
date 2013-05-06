@@ -141,7 +141,7 @@ public class Renderer {
 				currentFood = clickFood;
 
 			} else {
-				state.foodSnap(30, 30,551, 400);
+				state.foodSnap(0, 70,551, 400);
 			}
 			mousePos = newMousePos;
 		}
@@ -173,7 +173,7 @@ public class Renderer {
 	//post: ants are drawn on the screen.
 	private void drawFood(java.util.List<Food> food) {
 		for (Food f : food) {
-			g2d.drawImage(f.image, f.pos.x, f.pos.y, (f.pos.x + SimulationState.FOOD_SIZE), (f.pos.y + SimulationState.FOOD_SIZE), 0, 0, f.image.getHeight(null), f.image.getWidth(null), null); //these numbers are probably wildly wrong
+			g2d.drawImage(f.image, f.pos.x, f.pos.y, (f.pos.x + SimulationState.FOOD_SIZE), (int)(f.pos.y + SimulationState.FOOD_SIZE), 0, 0, f.image.getHeight(null), f.image.getWidth(null), null); //these numbers are probably wildly wrong
 		}
 
 	}

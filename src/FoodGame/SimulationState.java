@@ -21,8 +21,8 @@ import org.json.JSONObject;
 public class SimulationState implements Serializable {
 	// TODO make sure this serializes properly for saving
 
-	private static int FRIDGE_SIZE = 8;
-	public static int FOOD_SIZE = 50;
+	private static int FRIDGE_SIZE = 12;
+	public static int FOOD_SIZE = 52;
 	public final Map<String, List<Food>> foodMap;
 	public final List<Food> curFoods = new ArrayList<>();
 	public final List<Food> foodsInBag = new ArrayList<>();
@@ -39,7 +39,7 @@ public class SimulationState implements Serializable {
 		}
 		while (curFoods.size() < FRIDGE_SIZE) {
 			int choice = rand.nextInt(foodList.size());
-			curFoods.add(foodList.get(choice));
+			curFoods.add(foodList.remove(choice));
 		}
 	}
 
@@ -69,9 +69,9 @@ public class SimulationState implements Serializable {
 
 		for (int i = 0; i < curFoods.size(); i++) {
 			Food f = curFoods.get(i);
-			if (f.pos.x >= bagX && f.pos.y >= bagY && f.pos.x <= bagX + 200 && f.pos.y <= bagY + 60) {
+			if (f.pos.x >= bagX && f.pos.y >= bagY && f.pos.x <= bagX + 400 && f.pos.y <= bagY + 160) {
 			} else {
-				f.setPos(new Vector2(x + 30 + 60 * (i % 2), y + 30 + (int) (i / 2) * 60));
+				f.setPos(new Vector2(x + 150 + 70 * (i % 3), y + 250 + (int) (i / 3) * 65));
 			}
 		}
 	}
