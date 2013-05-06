@@ -25,8 +25,9 @@ public class Main {
 		
 		//add the foods to the simulator
 		
+		
 		//s.addFood(new Food(40, 50, "salad", "images/salad.png"));
-		//s.addFood(new Food(40, 40, "burger", "images/burger.png"));
+		
 		Renderer r = new Renderer(s);
 		r.play();
 		

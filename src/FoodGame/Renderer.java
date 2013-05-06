@@ -41,19 +41,17 @@ public class Renderer {
 	private final SimulationState state;
 	private boolean graphicsSetup = false;
 	private boolean running = true;
-	private int currentState = 0;
+	private int currentState = 1;
 	private boolean paused = false;
-	
 	//inputs
 	private KeyboardInput keyboard = new KeyboardInput(); // Keyboard polling
 	private MouseInput mouse = new MouseInput();
 	private Food currentFood = null;
 	private BufferedImage backgroundImg;
 	private Image bkg1;
-	
 	private BufferedImage bklunch;
 	private Image bkl;
-	
+
 	public Renderer(SimulationState s) {
 		this.state = s;
 	}
@@ -117,11 +115,13 @@ public class Renderer {
 		Point mousePos = new Point(0, 0);
 		while (running) {
 
+			state.setUpFridge();
 
 			// Poll the keyboard
 			keyboard.poll();
 			mouse.poll();
 			if (keyboard.keyDownOnce(KeyEvent.VK_SPACE)) {
+
 				paused = !paused;
 			}
 
@@ -140,8 +140,9 @@ public class Renderer {
 				}
 				currentFood = clickFood;
 
+			} else {
+				state.foodSnap(30, 30,551, 400);
 			}
-
 			mousePos = newMousePos;
 		}
 
@@ -172,45 +173,68 @@ public class Renderer {
 	//post: ants are drawn on the screen.
 	private void drawFood(java.util.List<Food> food) {
 		for (Food f : food) {
-			g2d.drawImage(f.image, f.pos.x, f.pos.y, null); //these numbers are probably wildly wrong
+			g2d.drawImage(f.image, f.pos.x, f.pos.y, (f.pos.x + SimulationState.FOOD_SIZE), (f.pos.y + SimulationState.FOOD_SIZE), 0, 0, f.image.getHeight(null), f.image.getWidth(null), null); //these numbers are probably wildly wrong
 		}
 
 	}
 
-	private void drawGrid() {
+	private void drawTitle() {
+		g2d.setColor(Color.BLACK);
+		g2d.setFont(new Font("LucidaSans", Font.PLAIN, 30));
+		g2d.drawString("Grab and Eat", 30, 60);
+		drawButton(50, 90, 100, 30, "test");
+
+	}
+
+	private void drawButton(int x, int y, int w, int h, String text) {
+		g2d.setColor(Color.BLACK);
+		g2d.draw3DRect(x, y, w, h, true);
+		g2d.setFont(new Font("LucidaSans", Font.PLAIN, 20));
+		g2d.drawString(text, x + (int) (0.1 * w), y + (int) (0.7 * h));
 	}
 
 	private void drawFoodStats(Food f) {
 		if (f != null) {
 			g2d.setColor(Color.BLACK);
-			g2d.drawString("Food Quality: " + f.foodQuality, 500, 100);
+			g2d.drawString("Calories", 420, 60);
+			g2d.drawString("Proteins", 420, 90);
+			g2d.drawString("Fruits", 420, 120);
+			g2d.drawString("Vegetables", 420, 150);
+			g2d.drawString("Grains", 420, 180);
+			g2d.drawString("Dairy", 420, 210);
+			g2d.drawString("Fats", 420, 240);
+			g2d.drawString("Sugars", 420, 270);
+			g2d.setFont(new Font("LucidaSans", Font.PLAIN, 25));
+			g2d.drawString("Current", 550, 30);
+			g2d.drawString("Goals", 680, 30);
 		}
+
 	}
 
 	private void drawBackground() {
 		//TODO: Draw Background. Refridgerator and stuff.
 		backgroundImg.getGraphics().drawImage(bkg1, 0, 0, null);
 		g2d.drawImage(backgroundImg, 0, 70, null);
-		
+
 		bklunch.getGraphics().drawImage(bkl, 0, 0, null);
 		g2d.drawImage(bklunch, 551, 400, null);
-		
-		Graphics2D graphics2D=(Graphics2D) g2d;
+
+		Graphics2D graphics2D = (Graphics2D) g2d;
 		GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    graphics2D.setFont(new Font("LucidaSans", Font.PLAIN, 20));
-	    graphics2D.setColor(Color.BLACK);
-	    graphics2D.drawString("Calories", 420, 60);
-		graphics2D.drawString("Proteins", 420, 90);
-		graphics2D.drawString("Fruits", 420, 120);
-		graphics2D.drawString("Vegetables", 420, 150);
-		graphics2D.drawString("Grains", 420, 180);
-		graphics2D.drawString("Dairy", 420, 210);
-		graphics2D.drawString("Fats", 420, 240);
-		graphics2D.drawString("Sugars", 420, 270);
-		graphics2D.setFont(new Font("LucidaSans", Font.PLAIN, 25));
-		graphics2D.drawString("Current", 550, 30);
-		graphics2D.drawString("Goals", 680, 30);
-		
+		g2d.setFont(new Font("LucidaSans", Font.PLAIN, 20));
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("Calories", 420, 60);
+		g2d.drawString("Proteins", 420, 90);
+		g2d.drawString("Fruits", 420, 120);
+		g2d.drawString("Vegetables", 420, 150);
+		g2d.drawString("Grains", 420, 180);
+		g2d.drawString("Dairy", 420, 210);
+		g2d.drawString("Fats", 420, 240);
+		g2d.drawString("Sugars", 420, 270);
+		g2d.setFont(new Font("LucidaSans", Font.PLAIN, 25));
+		g2d.drawString("Current", 550, 30);
+		g2d.drawString("Goals", 680, 30);
+
 	}
 
 	//pre: graphics are set up, things that need to be drawn are instantiated.
@@ -220,12 +244,19 @@ public class Renderer {
 		g2d.setColor(background);
 		g2d.fillRect(0, 0, resX, resY);
 
-		drawBackground();
+		switch (currentState) {
+			case 0:
+				drawTitle();
+				break;
+			case 1:
+				drawBackground();
 
-		drawFood(state.getFoodList());
-		drawFoodStats(currentFood);
-//		g2d.drawString("Frame " + currentState, 10, 10);
+				drawFood(state.getFoods());
+				drawFoodStats(currentFood);
+				//		g2d.drawString("Frame " + currentState, 10, 10);
+				break;
 
+		}
 
 		// Blit image and flip...
 		graphics = buffer.getDrawGraphics();
@@ -287,16 +318,16 @@ public class Renderer {
 		frameDelay = Math.round(1000 / Configuration.currentConfig.FPS);
 
 		try {
-			BufferedImage bkg= ImageIO.read(new File("images/fridge.png"));
-			 bkg1 =  bkg.getScaledInstance(550, 520, Image.SCALE_SMOOTH);
-			backgroundImg=new BufferedImage(bkg1.getWidth(null), bkg1.getHeight(null), BufferedImage.TYPE_INT_ARGB );
-			
-			BufferedImage lk= ImageIO.read(new File("images/lunchbag.png"));
-			bkl =  lk.getScaledInstance(245, 200, Image.SCALE_SMOOTH);
-			bklunch=new BufferedImage(bkl.getWidth(null), bkl.getHeight(null), BufferedImage.TYPE_INT_ARGB );
-			
-			
-			
+			BufferedImage bkg = ImageIO.read(new File("images/fridge.png"));
+			bkg1 = bkg.getScaledInstance(550, 520, Image.SCALE_SMOOTH);
+			backgroundImg = new BufferedImage(bkg1.getWidth(null), bkg1.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+			BufferedImage lk = ImageIO.read(new File("images/lunchbag.png"));
+			bkl = lk.getScaledInstance(245, 200, Image.SCALE_SMOOTH);
+			bklunch = new BufferedImage(bkl.getWidth(null), bkl.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+
+
 		} catch (IOException e) {
 		}
 
