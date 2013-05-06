@@ -27,8 +27,10 @@ public class Main {
 		
 		
 		//s.addFood(new Food(40, 50, "salad", "images/salad.png"));
+		boy b =  new boy();
+		System.out.println(b.goal_fat);
+		Renderer r = new Renderer(s, b);
 		
-		Renderer r = new Renderer(s);
 		r.play();
 		
 		//perhaps insert code here that determines what mode and what amounts for the above are need?

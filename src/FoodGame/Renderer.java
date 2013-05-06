@@ -51,9 +51,15 @@ public class Renderer {
 	private Image bkg1;
 	private BufferedImage bklunch;
 	private Image bkl;
+	private scenario scene;
 
-	public Renderer(SimulationState s) {
+	public Renderer(SimulationState s, scenario scene) {
 		this.state = s;
+		this.scene = scene;
+	}
+	public Renderer(SimulationState s) {
+		this(s, null);
+		
 	}
 
 	private class DrawingThread extends Thread {
@@ -141,7 +147,7 @@ public class Renderer {
 				currentFood = clickFood;
 
 			} else {
-				state.foodSnap(0, 70,551, 400);
+				state.foodSnap(0, 70);
 			}
 			mousePos = newMousePos;
 		}
@@ -173,7 +179,7 @@ public class Renderer {
 	//post: ants are drawn on the screen.
 	private void drawFood(java.util.List<Food> food) {
 		for (Food f : food) {
-			g2d.drawImage(f.image, f.pos.x, f.pos.y, (f.pos.x + SimulationState.FOOD_SIZE), (int)(f.pos.y + SimulationState.FOOD_SIZE), 0, 0, f.image.getHeight(null), f.image.getWidth(null), null); //these numbers are probably wildly wrong
+			g2d.drawImage(f.image, f.pos.x, f.pos.y, (f.pos.x + SimulationState.FOOD_SIZE), (int) (f.pos.y + SimulationState.FOOD_SIZE), 0, 0, f.image.getHeight(null), f.image.getWidth(null), null); //these numbers are probably wildly wrong
 		}
 
 	}
@@ -193,21 +199,84 @@ public class Renderer {
 		g2d.drawString(text, x + (int) (0.1 * w), y + (int) (0.7 * h));
 	}
 
-	private void drawFoodStats(Food f) {
-		if (f != null) {
-			g2d.setColor(Color.BLACK);
-			g2d.drawString("Calories", 420, 60);
-			g2d.drawString("Proteins", 420, 90);
-			g2d.drawString("Fruits", 420, 120);
-			g2d.drawString("Vegetables", 420, 150);
-			g2d.drawString("Grains", 420, 180);
-			g2d.drawString("Dairy", 420, 210);
-			g2d.drawString("Fats", 420, 240);
-			g2d.drawString("Sugars", 420, 270);
-			g2d.setFont(new Font("LucidaSans", Font.PLAIN, 25));
-			g2d.drawString("Current", 550, 30);
-			g2d.drawString("Goals", 680, 30);
+//	private void drawFoodStats(Food f) {
+//		if (f != null) {
+//			g2d.setFont(new Font("LucidaSans", Font.PLAIN, 25));
+//			g2d.setColor(Color.BLACK);
+//			g2d.drawString("Calories" + f.getCalories(), 420, 60);
+//			g2d.drawString("Proteins" + f.getProtein(), 420, 90);
+//			g2d.drawString("Fruits", 420, 120);
+//			g2d.drawString("Vegetables", 420, 150);
+//			g2d.drawString("Grains", 420, 180);
+//			g2d.drawString("Dairy", 420, 210);
+//			g2d.drawString("Fats" + f.getFat(), 420, 240);
+//			g2d.drawString("Sugars" + f.getSugars(), 420, 270);
+//
+//			g2d.drawString("Current", 550, 30);
+//			g2d.drawString("Goals", 680, 30);
+//		}
+//	}
+
+	private void drawFoodsStats(java.util.List<Food> foods) {
+		int calories = 0;
+		float protein = 0;
+		float fat = 0;
+		float sugars = 0;
+		int vegatables = 0;
+		int fruit = 0;
+		int grain = 0;
+		int dairy = 0;
+		for (Food f : foods) {
+			if (f != null) {
+				calories += f.getCalories();
+				protein += f.getCalories();
+				fat += f.getCalories();
+				sugars += f.getCalories();
+				if ("fruits".equals(f.getCategory())) {
+					fruit++;
+				}
+				if ("vegatables".equals(f.getCategory())) {
+					vegatables++;
+				}
+				if ("dairys".equals(f.getCategory())) {
+					dairy++;
+				}
+				if ("grains".equals(f.getCategory())) {
+					grain++;
+				}
+			}
 		}
+		g2d.setFont(new Font("LucidaSans", Font.PLAIN, 25));
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("Calories " , 420, 60);
+		g2d.drawString("Proteins " , 420, 90);
+		g2d.drawString("Fruits " , 420, 120);
+		g2d.drawString("Vegetables " , 420, 150);
+		g2d.drawString("Grains " , 420, 180);
+		g2d.drawString("Dairy " , 420, 210);
+		g2d.drawString("Fats " , 420, 240);
+		g2d.drawString("Sugars " , 420, 270);
+		
+		g2d.drawString( "" +calories, 550, 60);
+		g2d.drawString( "" +protein, 550, 90);
+		g2d.drawString("" + fruit, 550, 120);
+		g2d.drawString("" + vegatables, 550, 150);
+		g2d.drawString("" + grain, 550, 180);
+		g2d.drawString("" + dairy, 550, 210);
+		g2d.drawString("" + fat, 550, 240);
+		g2d.drawString("" + sugars, 550, 270);
+		
+		g2d.drawString( "" +scene.min_calories, 680, 60);
+		g2d.drawString( "" +scene.goal_proteins, 680, 90);
+		g2d.drawString("" + scene.fruits, 680, 120);
+		g2d.drawString("" + scene.vegetables, 680, 150);
+//		g2d.drawString("" + scene.min_calories, 680, 180);
+//		g2d.drawString("" + scene.min_calories, 680, 210);
+		g2d.drawString("" + scene.goal_fat, 680, 240);
+		g2d.drawString("" + scene.goal_sugars, 680, 270);
+
+		g2d.drawString("Current ", 550, 30);
+		g2d.drawString("Goals ", 680, 30);
 
 	}
 
@@ -219,21 +288,7 @@ public class Renderer {
 		bklunch.getGraphics().drawImage(bkl, 0, 0, null);
 		g2d.drawImage(bklunch, 551, 400, null);
 
-		Graphics2D graphics2D = (Graphics2D) g2d;
-		GraphicsEnvironment.getLocalGraphicsEnvironment();
-		g2d.setFont(new Font("LucidaSans", Font.PLAIN, 20));
-		g2d.setColor(Color.BLACK);
-		g2d.drawString("Calories", 420, 60);
-		g2d.drawString("Proteins", 420, 90);
-		g2d.drawString("Fruits", 420, 120);
-		g2d.drawString("Vegetables", 420, 150);
-		g2d.drawString("Grains", 420, 180);
-		g2d.drawString("Dairy", 420, 210);
-		g2d.drawString("Fats", 420, 240);
-		g2d.drawString("Sugars", 420, 270);
-		g2d.setFont(new Font("LucidaSans", Font.PLAIN, 25));
-		g2d.drawString("Current", 550, 30);
-		g2d.drawString("Goals", 680, 30);
+
 
 	}
 
@@ -252,7 +307,7 @@ public class Renderer {
 				drawBackground();
 
 				drawFood(state.getFoods());
-				drawFoodStats(currentFood);
+				drawFoodsStats(state.foodsInBag);
 				//		g2d.drawString("Frame " + currentState, 10, 10);
 				break;
 
